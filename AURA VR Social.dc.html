@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #08080b; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: rgba(200,162,75,.22); border-radius: 9px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @keyframes auraPulse { 0%,100% { opacity:1; transform:scale(1);} 50% { opacity:.35; transform:scale(.7);} }
+  @keyframes auraFloat { 0%,100% { transform:translateY(0);} 50% { transform:translateY(-14px);} }
+  @keyframes auraEq { 0%,100% { height:5px;} 50% { height:16px;} }
+  @keyframes auraGlow { 0%,100% { opacity:.55;} 50% { opacity:.95;} }
+  @keyframes auraSpin { to { transform:rotate(360deg);} }
+</style>
+</helmet>
+<div style="height:100vh; width:100%; background:
+      radial-gradient(1200px 700px at 78% -10%, rgba(200,162,75,.14), transparent 60%),
+      radial-gradient(900px 600px at 8% 110%, rgba(120,80,200,.10), transparent 60%),
+      #08080b;
+      display:flex; font-family:'Manrope',sans-serif;">
+  <div style="--accent: {{ accent }}; --gap:{{ gap }}px; width:100%; height:100%; display:flex;
+        overflow:hidden; background:#0c0c11;">
+
+    <!-- SIDEBAR -->
+    <aside style="width:236px; flex:none; background:linear-gradient(180deg,#101015,#0a0a0e); border-right:1px solid rgba(200,162,75,.12); display:flex; flex-direction:column; padding:26px 18px;">
+      <div style="display:flex; align-items:center; gap:11px; padding:4px 8px 26px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#7a5d22);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px -6px var(--accent);">
+          <div style="width:13px;height:13px;border-radius:50%;border:2.5px solid #0c0c11;"></div>
+        </div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;letter-spacing:3px;color:#f4ecd8;line-height:1;">AURA</div>
+          <div style="font-size:9px;letter-spacing:3px;color:#8a8478;text-transform:uppercase;margin-top:2px;">Spatial Social</div>
+        </div>
+      </div>
+      <nav style="display:flex;flex-direction:column;gap:3px;">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="7">
+          <button onClick="{{ item.onClick }}" style="{{ item.btnStyle }}">
+            <span style="{{ item.barStyle }}"></span>
+            <span>{{ item.label }}</span>
+          </button>
+        </sc-for>
+      </nav>
+      <div style="margin-top:auto;border-top:1px solid rgba(200,162,75,.12);padding-top:16px;display:flex;align-items:center;gap:11px;cursor:pointer;" onClick="{{ goProfile }}">
+        <div style="width:40px;height:40px;border-radius:50%;background:conic-gradient(from 200deg,var(--accent),#9b5de5,#c8a24b);padding:2px;">
+          <div style="width:100%;height:100%;border-radius:50%;background:#0c0c11;display:flex;align-items:center;justify-content:center;font-weight:700;color:#f4ecd8;font-size:14px;">NA</div>
+        </div>
+        <div style="min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:#ece7da;">Nadia Arman</div>
+          <div style="font-size:11px;color:#7f7a6e;display:flex;align-items:center;gap:5px;">
+            <span style="width:7px;height:7px;border-radius:50%;background:#4ade80;"></span>In Aurora Hall
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main style="flex:1;min-width:0;display:flex;flex-direction:column;background:radial-gradient(900px 500px at 90% -5%, rgba(200,162,75,.07), transparent 60%);">
+      <!-- topbar -->
+      <header style="height:68px;flex:none;display:flex;align-items:center;gap:18px;padding:0 28px;border-bottom:1px solid rgba(200,162,75,.10);">
+        <div style="position:relative;flex:1;max-width:420px;">
+          <input placeholder="Search worlds, events, people…" style="width:100%;height:40px;background:#14141a;border:1px solid rgba(200,162,75,.14);border-radius:11px;padding:0 16px 0 40px;color:#e8e3d6;font-family:'Manrope';font-size:13px;outline:none;">
+          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);width:14px;height:14px;border:1.6px solid #6f6a5e;border-radius:50%;"></span>
+          <span style="position:absolute;left:24px;top:24px;width:7px;height:1.6px;background:#6f6a5e;transform:rotate(45deg);"></span>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:14px;">
+          <div style="display:flex;align-items:center;gap:7px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.32);padding:7px 13px;border-radius:20px;">
+            <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;animation:{{ pulseAnim }};"></span>
+            <span style="font-size:12px;font-weight:700;color:#fca5a5;letter-spacing:.5px;">{{ liveCount }} LIVE NOW</span>
+          </div>
+          <button style="width:40px;height:40px;border-radius:11px;background:#14141a;border:1px solid rgba(200,162,75,.14);color:#cfc8b6;cursor:pointer;font-size:15px;">♦</button>
+        </div>
+      </header>
+
+      <div style="flex:1;overflow-y:auto;">
+
+        <!-- ===== DISCOVER ===== -->
+        <sc-if value="{{ isDiscover }}" hint-placeholder-val="{{ true }}">
+        <section style="padding:30px 30px 44px;">
+          <div style="position:relative;border-radius:18px;overflow:hidden;padding:38px 40px;margin-bottom:30px;background:{{ heroGlow }};border:1px solid rgba(200,162,75,.2);">
+            <div style="position:relative;z-index:2;max-width:560px;">
+              <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(8,8,11,.5);backdrop-filter:blur(6px);padding:6px 13px;border-radius:20px;margin-bottom:16px;border:1px solid rgba(255,255,255,.12);">
+                <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;animation:{{ pulseAnim }};"></span>
+                <span style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:#fff;">HEADLINING TONIGHT · 21:00 GMT</span>
+              </div>
+              <h1 style="font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:700;color:#fff;margin:0 0 10px;line-height:1.02;text-shadow:0 2px 30px rgba(0,0,0,.4);">AURELIA — Live in&nbsp;the&nbsp;Aether</h1>
+              <p style="font-size:15px;color:rgba(255,255,255,.82);margin:0 0 24px;line-height:1.6;">A volumetric concert across three spatial stages. Bring your avatar, gather your crew, feel the bass in spatial audio.</p>
+              <div style="display:flex;gap:12px;align-items:center;">
+                <button onClick="{{ openHero }}" style="background:var(--accent);color:#1a1405;border:none;font-weight:800;font-size:14px;padding:13px 26px;border-radius:12px;cursor:pointer;font-family:'Manrope';box-shadow:0 12px 30px -10px var(--accent);">Enter Lobby</button>
+                <div style="display:flex;align-items:center;gap:-8px;">
+                  <sc-for list="{{ heroAvatars }}" as="a" hint-placeholder-count="4">
+                    <span style="{{ a.style }}"></span>
+                  </sc-for>
+                </div>
+                <span style="font-size:13px;color:rgba(255,255,255,.78);font-weight:600;">+12.4k going</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:9px;margin-bottom:22px;flex-wrap:wrap;">
+            <sc-for list="{{ filterChips }}" as="c" hint-placeholder-count="4">
+              <button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;">
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:27px;font-weight:600;color:#ece7da;margin:0;">Happening now &amp; next</h2>
+            <span style="font-size:12px;color:#807a6d;">{{ eventCount }} experiences</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);">
+            <sc-for list="{{ events }}" as="e" hint-placeholder-count="6">
+              <div onClick="{{ e.onClick }}" style="border-radius:16px;overflow:hidden;cursor:pointer;background:#121218;border:1px solid rgba(200,162,75,.12);transition:transform .15s;" style-hover="transform:translateY(-4px);border:1px solid rgba(200,162,75,.4);">
+                <div style="height:148px;position:relative;background:{{ e.glow }};">
+                  <span style="{{ e.badgeStyle }}">{{ e.badge }}</span>
+                  <span style="position:absolute;bottom:10px;right:12px;font-size:11px;color:rgba(255,255,255,.85);background:rgba(8,8,11,.45);backdrop-filter:blur(4px);padding:4px 9px;border-radius:8px;font-weight:600;">{{ e.attendees }} in</span>
+                </div>
+                <div style="padding:15px 16px 17px;">
+                  <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:6px;">{{ e.tag }}</div>
+                  <div style="font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:#efeadb;line-height:1.12;margin-bottom:4px;">{{ e.title }}</div>
+                  <div style="font-size:12.5px;color:#86806f;">{{ e.when }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== EVENT / CONCERT LOBBY ===== -->
+        <sc-if value="{{ isEvent }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:0 0 44px;">
+          <div style="position:relative;height:330px;background:{{ ev.glow }};display:flex;align-items:flex-end;padding:34px 36px;">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,11,.1),rgba(8,8,11,.85));"></div>
+            <button onClick="{{ backDiscover }}" style="position:absolute;top:24px;left:30px;z-index:3;background:rgba(8,8,11,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);color:#fff;padding:9px 16px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Manrope';">← Discover</button>
+            <div style="position:relative;z-index:2;width:100%;">
+              <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.4);padding:6px 13px;border-radius:20px;margin-bottom:14px;">
+                <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;animation:{{ pulseAnim }};"></span>
+                <span style="font-size:11px;font-weight:700;letter-spacing:1px;color:#fecaca;">{{ ev.badge }} · STARTS {{ ev.when }}</span>
+              </div>
+              <h1 style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:700;color:#fff;margin:0;line-height:1;">{{ ev.title }}</h1>
+              <div style="font-size:15px;color:rgba(255,255,255,.8);margin-top:8px;">{{ ev.tag }} · hosted in {{ ev.venue }}</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 320px;gap:28px;padding:28px 36px 0;">
+            <div>
+              <div style="display:flex;gap:30px;margin-bottom:26px;">
+                <div><div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--accent);font-weight:700;">{{ ev.countdown }}</div><div style="font-size:12px;color:#807a6d;letter-spacing:1px;">UNTIL DOORS</div></div>
+                <div><div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#efeadb;font-weight:700;">{{ ev.attendees }}</div><div style="font-size:12px;color:#807a6d;letter-spacing:1px;">ATTENDING</div></div>
+                <div><div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:#efeadb;font-weight:700;">3</div><div style="font-size:12px;color:#807a6d;letter-spacing:1px;">SPATIAL STAGES</div></div>
+              </div>
+              <h3 style="font-family:'Cormorant Garamond',serif;font-size:22px;color:#ece7da;font-weight:600;margin:0 0 14px;">Set times</h3>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:30px;">
+                <sc-for list="{{ lineup }}" as="l" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:16px;background:#121218;border:1px solid rgba(200,162,75,.1);border-radius:13px;padding:14px 18px;">
+                    <span style="font-size:13px;font-weight:700;color:var(--accent);width:54px;font-variant-numeric:tabular-nums;">{{ l.time }}</span>
+                    <div style="flex:1;"><div style="font-size:15px;font-weight:600;color:#eae5d7;">{{ l.act }}</div><div style="font-size:12px;color:#807a6d;">{{ l.stage }}</div></div>
+                    <span style="{{ l.statusStyle }}">{{ l.status }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <aside>
+              <div style="background:linear-gradient(180deg,#15151c,#101015);border:1px solid rgba(200,162,75,.18);border-radius:16px;padding:22px;position:sticky;top:10px;">
+                <div style="font-size:13px;color:#807a6d;margin-bottom:4px;">Your ticket</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:26px;color:#efeadb;font-weight:700;margin-bottom:18px;">Front-Row Pass · Free</div>
+                <button onClick="{{ toggleJoin }}" style="{{ joinBtnStyle }}">{{ joinLabel }}</button>
+                <div style="display:flex;align-items:center;gap:9px;margin-top:18px;">
+                  <div style="display:flex;">
+                    <sc-for list="{{ heroAvatars }}" as="a" hint-placeholder-count="4"><span style="{{ a.style }}"></span></sc-for>
+                  </div>
+                  <span style="font-size:12px;color:#86806f;">Mara, Theo &amp; 9 friends going</span>
+                </div>
+                <div style="border-top:1px solid rgba(200,162,75,.12);margin-top:18px;padding-top:16px;display:flex;flex-direction:column;gap:11px;">
+                  <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#86806f;">Spatial audio</span><span style="color:#cfc8b6;font-weight:600;">Dolby Atmos</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#86806f;">Capacity</span><span style="color:#cfc8b6;font-weight:600;">Unlimited shards</span></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#86806f;">Devices</span><span style="color:#cfc8b6;font-weight:600;">VR · Web · Mobile</span></div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== WORLDS ===== -->
+        <sc-if value="{{ isWorlds }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:30px 30px 44px;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;">
+            <div>
+              <h1 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:#ece7da;margin:0;">Worlds</h1>
+              <p style="font-size:14px;color:#86806f;margin:6px 0 0;">Persistent spaces you own, follow, or can drop into instantly.</p>
+            </div>
+            <button onClick="{{ createWorld }}" style="background:var(--accent);color:#1a1405;border:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:11px;cursor:pointer;font-family:'Manrope';box-shadow:0 12px 30px -12px var(--accent);">+ Create World</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);">
+            <sc-for list="{{ worlds }}" as="w" hint-placeholder-count="6">
+              <div style="border-radius:16px;overflow:hidden;background:#121218;border:1px solid rgba(200,162,75,.12);">
+                <div style="height:150px;position:relative;background:{{ w.glow }};display:flex;align-items:flex-start;justify-content:space-between;padding:13px;">
+                  <span style="font-size:11px;font-weight:700;color:#fff;background:rgba(8,8,11,.45);backdrop-filter:blur(4px);padding:5px 10px;border-radius:8px;">{{ w.theme }}</span>
+                  <span style="font-size:11px;font-weight:700;color:#bbf7d0;background:rgba(16,40,24,.6);padding:5px 10px;border-radius:8px;display:flex;align-items:center;gap:5px;"><span style="width:6px;height:6px;border-radius:50%;background:#4ade80;"></span>{{ w.online }}</span>
+                </div>
+                <div style="padding:15px 16px 17px;">
+                  <div style="font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:#efeadb;margin-bottom:5px;">{{ w.name }}</div>
+                  <div style="font-size:12.5px;color:#86806f;margin-bottom:14px;">{{ w.desc }}</div>
+                  <button onClick="{{ w.onClick }}" style="width:100%;background:#1c1c24;border:1px solid rgba(200,162,75,.22);color:var(--accent);font-weight:700;font-size:13px;padding:10px;border-radius:10px;cursor:pointer;font-family:'Manrope';" style-hover="background:var(--accent);color:#1a1405;">Enter World →</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== IN-WORLD ROOM (co-presence + spatial voice) ===== -->
+        <sc-if value="{{ isRoom }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:0;">
+          <div style="position:relative;height:430px;background:{{ room.glow }};overflow:hidden;">
+            <div style="position:absolute;inset:0;background:radial-gradient(700px 400px at 50% 120%, rgba(8,8,11,0), rgba(8,8,11,.6));"></div>
+            <button onClick="{{ backWorlds }}" style="position:absolute;top:22px;left:28px;z-index:5;background:rgba(8,8,11,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.16);color:#fff;padding:9px 16px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Manrope';">← Leave</button>
+            <div style="position:absolute;top:22px;right:28px;z-index:5;display:flex;align-items:center;gap:8px;background:rgba(8,8,11,.5);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.14);padding:8px 14px;border-radius:20px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#4ade80;animation:{{ pulseAnim }};"></span>
+              <span style="font-size:12px;font-weight:700;color:#d6f5dd;">{{ room.name }} · {{ room.online }} present</span>
+            </div>
+            <!-- floating avatars -->
+            <sc-for list="{{ roomAvatars }}" as="a" hint-placeholder-count="5">
+              <div style="{{ a.wrapStyle }}">
+                <div style="{{ a.dotStyle }}"></div>
+                <div style="font-size:11px;color:#fff;text-align:center;margin-top:6px;text-shadow:0 1px 4px rgba(0,0,0,.6);font-weight:600;">{{ a.name }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- spatial voice control bar -->
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;padding:24px 32px 40px;">
+            <div>
+              <div style="display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,#15151c,#0f0f14);border:1px solid rgba(200,162,75,.16);border-radius:16px;padding:16px 20px;margin-bottom:20px;">
+                <button onClick="{{ toggleMic }}" style="{{ micBtnStyle }}">{{ micIcon }}</button>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:700;color:#eae5d7;">{{ micLabel }}</div>
+                  <div style="font-size:12px;color:#86806f;">Spatial voice · volume falls with distance</div>
+                </div>
+                <div style="display:flex;align-items:flex-end;gap:3px;height:18px;">
+                  <sc-for list="{{ eqBars }}" as="b" hint-placeholder-count="5"><span style="{{ b.style }}"></span></sc-for>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <sc-for list="{{ reactions }}" as="r" hint-placeholder-count="4">
+                    <button onClick="{{ r.onClick }}" style="width:42px;height:42px;border-radius:11px;background:#1c1c24;border:1px solid rgba(200,162,75,.18);font-size:18px;cursor:pointer;" style-hover="background:var(--accent);">{{ r.emoji }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="background:#101015;border:1px solid rgba(200,162,75,.1);border-radius:16px;padding:18px 20px;">
+                <div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#807a6d;font-weight:700;margin-bottom:12px;">Proximity chat</div>
+                <sc-for list="{{ chatLog }}" as="m" hint-placeholder-count="3">
+                  <div style="display:flex;gap:10px;margin-bottom:12px;align-items:flex-start;">
+                    <span style="{{ m.dotStyle }}"></span>
+                    <div><span style="font-size:13px;font-weight:700;color:#cfc8b6;">{{ m.who }}</span> <span style="font-size:13px;color:#9a948a;">{{ m.text }}</span></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <aside style="background:linear-gradient(180deg,#15151c,#0f0f14);border:1px solid rgba(200,162,75,.16);border-radius:16px;padding:18px;">
+              <div style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#807a6d;font-weight:700;margin-bottom:14px;">In this room · {{ room.online }}</div>
+              <sc-for list="{{ roomList }}" as="p" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:13px;">
+                  <span style="{{ p.dotStyle }}"></span>
+                  <div style="flex:1;font-size:13.5px;font-weight:600;color:#eae5d7;">{{ p.name }}</div>
+                  <span style="{{ p.micStyle }}">{{ p.mic }}</span>
+                </div>
+              </sc-for>
+            </aside>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== AVATAR STUDIO ===== -->
+        <sc-if value="{{ isAvatar }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:30px 30px 44px;display:grid;grid-template-columns:430px 1fr;gap:32px;">
+          <div style="border-radius:18px;background:{{ avatarStage }};border:1px solid rgba(200,162,75,.18);display:flex;align-items:center;justify-content:center;position:relative;min-height:560px;overflow:hidden;">
+            <div style="position:absolute;bottom:0;width:280px;height:60px;border-radius:50%;background:radial-gradient(closest-side, color-mix(in srgb, var(--accent) 45%, transparent), transparent);filter:blur(8px);"></div>
+            <div style="position:relative;animation:{{ floatAnim }};display:flex;flex-direction:column;align-items:center;">
+              <div style="width:96px;height:96px;border-radius:50%;background:{{ skinTone }};box-shadow:0 0 40px {{ auraColor }};border:3px solid rgba(255,255,255,.15);"></div>
+              <div style="width:150px;height:200px;margin-top:-12px;border-radius:60px 60px 34px 34px;background:{{ outfitColor }};box-shadow:0 20px 50px -16px rgba(0,0,0,.7), inset 0 2px 0 rgba(255,255,255,.12);"></div>
+            </div>
+            <div style="position:absolute;top:18px;left:18px;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,.6);text-transform:uppercase;">Live preview</div>
+          </div>
+          <div>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:#ece7da;margin:0 0 4px;">Avatar Studio</h1>
+            <p style="font-size:14px;color:#86806f;margin:0 0 26px;">Your identity travels with you across every world and event.</p>
+
+            <div style="margin-bottom:26px;">
+              <div style="font-size:13px;font-weight:700;color:#cfc8b6;margin-bottom:11px;">Skin tone</div>
+              <div style="display:flex;gap:11px;">
+                <sc-for list="{{ skins }}" as="s" hint-placeholder-count="5"><button onClick="{{ s.onClick }}" style="{{ s.style }}"></button></sc-for>
+              </div>
+            </div>
+            <div style="margin-bottom:26px;">
+              <div style="font-size:13px;font-weight:700;color:#cfc8b6;margin-bottom:11px;">Outfit</div>
+              <div style="display:flex;gap:11px;flex-wrap:wrap;">
+                <sc-for list="{{ outfits }}" as="o" hint-placeholder-count="5"><button onClick="{{ o.onClick }}" style="{{ o.style }}">{{ o.name }}</button></sc-for>
+              </div>
+            </div>
+            <div style="margin-bottom:30px;">
+              <div style="font-size:13px;font-weight:700;color:#cfc8b6;margin-bottom:11px;">Signature aura</div>
+              <div style="display:flex;gap:11px;">
+                <sc-for list="{{ auras }}" as="a" hint-placeholder-count="5"><button onClick="{{ a.onClick }}" style="{{ a.style }}"></button></sc-for>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;">
+              <button onClick="{{ saveAvatar }}" style="{{ saveBtnStyle }}">{{ saveLabel }}</button>
+              <button style="background:transparent;border:1px solid rgba(200,162,75,.3);color:#cfc8b6;font-weight:600;font-size:14px;padding:13px 22px;border-radius:12px;cursor:pointer;font-family:'Manrope';">Randomize</button>
+            </div>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== CREATOR DASHBOARD ===== -->
+        <sc-if value="{{ isCreator }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:30px 30px 44px;">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <h1 style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;color:#ece7da;margin:0;">Creator Studio</h1>
+              <p style="font-size:14px;color:#86806f;margin:6px 0 0;">Host ticketed events, sell spatial goods, and track your payouts.</p>
+            </div>
+            <button onClick="{{ createWorld }}" style="background:var(--accent);color:#1a1405;border:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:11px;cursor:pointer;font-family:'Manrope';box-shadow:0 12px 30px -12px var(--accent);">+ Host an Event</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px;">
+            <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+              <div style="background:linear-gradient(180deg,#15151c,#101015);border:1px solid rgba(200,162,75,.14);border-radius:15px;padding:20px;">
+                <div style="font-size:12px;color:#86806f;letter-spacing:.5px;margin-bottom:8px;">{{ s.label }}</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:#efeadb;line-height:1;">{{ s.value }}</div>
+                <div style="{{ s.deltaStyle }}">{{ s.delta }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:24px;">
+            <div style="background:#101015;border:1px solid rgba(200,162,75,.1);border-radius:16px;padding:22px;">
+              <div style="font-size:13px;font-weight:700;color:#cfc8b6;margin-bottom:16px;">Your events</div>
+              <sc-for list="{{ eventRows }}" as="r" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid rgba(200,162,75,.08);">
+                  <div style="width:46px;height:46px;border-radius:11px;background:{{ r.glow }};flex:none;"></div>
+                  <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#eae5d7;">{{ r.title }}</div><div style="font-size:12px;color:#807a6d;">{{ r.date }} · {{ r.sold }} tickets</div></div>
+                  <div style="text-align:right;"><div style="font-size:15px;font-weight:700;color:var(--accent);font-family:'Manrope';">{{ r.revenue }}</div><span style="{{ r.statusStyle }}">{{ r.status }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+            <aside style="background:linear-gradient(180deg,#1a1508,#101015);border:1px solid rgba(200,162,75,.28);border-radius:16px;padding:22px;">
+              <div style="font-size:12px;color:#86806f;letter-spacing:.5px;margin-bottom:6px;">Available payout</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:4px;">$8,240</div>
+              <div style="font-size:12px;color:#86806f;margin-bottom:18px;">across 3 currencies · updated live</div>
+              <button onClick="{{ payout }}" style="{{ payoutBtnStyle }}">{{ payoutLabel }}</button>
+              <div style="border-top:1px solid rgba(200,162,75,.14);margin-top:18px;padding-top:16px;font-size:12px;color:#86806f;line-height:1.6;">88% creator share · instant settlement to wallet or bank.</div>
+            </aside>
+          </div>
+        </section>
+        </sc-if>
+
+        <!-- ===== PROFILE ===== -->
+        <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+        <section style="padding:0 0 44px;">
+          <div style="height:200px;background:radial-gradient(600px 300px at 30% 0%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 60%), linear-gradient(120deg,#1a1508,#0f0f14);"></div>
+          <div style="padding:0 36px;margin-top:-58px;position:relative;">
+            <div style="display:flex;align-items:flex-end;gap:22px;margin-bottom:30px;">
+              <div style="width:116px;height:116px;border-radius:28px;background:conic-gradient(from 200deg,var(--accent),#9b5de5,var(--accent));padding:3px;box-shadow:0 20px 50px -16px rgba(0,0,0,.7);">
+                <div style="width:100%;height:100%;border-radius:25px;background:#0c0c11;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:700;color:#f4ecd8;">NA</div>
+              </div>
+              <div style="padding-bottom:8px;flex:1;">
+                <h1 style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;color:#fff;margin:0;">Nadia Arman</h1>
+                <div style="font-size:14px;color:#9a948a;margin-top:4px;">@nadia.aura · Joined 2024 · Verified Host</div>
+              </div>
+              <button onClick="{{ goAvatar }}" style="background:var(--accent);color:#1a1405;border:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:11px;cursor:pointer;font-family:'Manrope';">Edit Avatar</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px;">
+              <sc-for list="{{ profileStats }}" as="s" hint-placeholder-count="4">
+                <div style="background:#121218;border:1px solid rgba(200,162,75,.12);border-radius:14px;padding:18px;text-align:center;">
+                  <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--accent);">{{ s.value }}</div>
+                  <div style="font-size:12px;color:#86806f;margin-top:4px;">{{ s.label }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#ece7da;font-weight:600;margin:0 0 16px;">Worlds you own</h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap);">
+              <sc-for list="{{ ownedWorlds }}" as="w" hint-placeholder-count="3">
+                <div style="border-radius:14px;overflow:hidden;background:#121218;border:1px solid rgba(200,162,75,.12);">
+                  <div style="height:96px;background:{{ w.glow }};"></div>
+                  <div style="padding:13px 15px;"><div style="font-size:15px;font-weight:600;color:#eae5d7;">{{ w.name }}</div><div style="font-size:12px;color:#807a6d;margin-top:2px;">{{ w.online }} online now</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:920},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#c8a24b&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;gap&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:22,&quot;min&quot;:14,&quot;max&quot;:34,&quot;step&quot;:2,&quot;tsType&quot;:&quot;number&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'discover', filter: 'All', joined: false, saved: false, paid: false,
+    micOn: true, skin: 1, outfit: 0, aura: 0, ev: null, room: null,
+  };
+
+  glows = {
+    aurelia: 'radial-gradient(circle at 25% 25%, #9b5de5, transparent 55%), radial-gradient(circle at 80% 70%, #f15bb5, transparent 50%), linear-gradient(135deg,#241046,#0d0a1a)',
+    neon:    'radial-gradient(circle at 30% 20%, #00bbf9, transparent 55%), radial-gradient(circle at 85% 80%, #c8a24b, transparent 50%), linear-gradient(135deg,#0a1a2e,#0d0a1a)',
+    ember:   'radial-gradient(circle at 70% 25%, #ff8500, transparent 55%), radial-gradient(circle at 15% 80%, #d4145a, transparent 50%), linear-gradient(135deg,#2a0f12,#120a10)',
+    forest:  'radial-gradient(circle at 30% 30%, #2dd4bf, transparent 55%), radial-gradient(circle at 80% 75%, #84cc16, transparent 50%), linear-gradient(135deg,#0a2018,#0d0f0c)',
+    royal:   'radial-gradient(circle at 25% 25%, #7c3aed, transparent 55%), radial-gradient(circle at 80% 70%, #c8a24b, transparent 50%), linear-gradient(135deg,#1a1338,#0c0a14)',
+    rose:    'radial-gradient(circle at 35% 25%, #fb7185, transparent 55%), radial-gradient(circle at 80% 75%, #f59e0b, transparent 50%), linear-gradient(135deg,#2a1018,#140a10)',
+  };
+
+  go = (v) => this.setState({ view: v });
+
+  eventData() {
+    const g = this.glows;
+    return [
+      { id:'aurelia', title:'AURELIA — Live in the Aether', tag:'Concert', when:'Tonight · 21:00', badge:'LIVE SOON', attendees:'12.4k', glow:g.aurelia, venue:'Aurora Hall', countdown:'02:14:09', cat:'Concerts' },
+      { id:'midnight', title:'Midnight Lounge Sessions', tag:'Hangout', when:'Now · open floor', badge:'LIVE', attendees:'842', glow:g.neon, venue:'The Velvet Room', countdown:'live now', cat:'Hangouts' },
+      { id:'frontier', title:'Frontiers of Spatial AI', tag:'Talk', when:'Fri · 18:00', badge:'UPCOMING', attendees:'3.1k', glow:g.forest, venue:'Atrium Stage', countdown:'1d 04:00', cat:'Talks' },
+      { id:'pulse', title:'PULSE: Bass Cathedral', tag:'Concert', when:'Sat · 22:00', badge:'UPCOMING', attendees:'9.8k', glow:g.ember, venue:'The Cathedral', countdown:'2d 08:00', cat:'Concerts' },
+      { id:'salon', title:'Founders Salon · Web3', tag:'Hangout', when:'Now · 28 in', badge:'LIVE', attendees:'28', glow:g.royal, venue:'Skyline Loft', countdown:'live now', cat:'Hangouts' },
+      { id:'gala', title:'The Gold Gala', tag:'Talk', when:'Sun · 20:00', badge:'UPCOMING', attendees:'5.5k', glow:g.rose, venue:'Grand Ballroom', countdown:'3d 06:00', cat:'Talks' },
+    ];
+  }
+
+  badgeStyle(badge) {
+    const live = badge === 'LIVE' || badge === 'LIVE SOON';
+    const c = live ? ['rgba(239,68,68,.85)', '#fff'] : ['rgba(8,8,11,.5)', '#e8d9b5'];
+    return `position:absolute;top:11px;left:12px;font-size:10px;font-weight:800;letter-spacing:1px;color:${c[1]};background:${c[0]};backdrop-filter:blur(4px);padding:5px 10px;border-radius:8px;`;
+  }
+
+  avatarTokens() {
+    const skins = ['#3a2a1e','#6b4a32','#9c6b48','#c89464','#e8c4a0'];
+    const outfits = [
+      { name:'Onyx Suit', c:'linear-gradient(160deg,#2a2a32,#15151a)' },
+      { name:'Gold Drape', c:'linear-gradient(160deg,var(--accent),#7a5d22)' },
+      { name:'Neon Jacket', c:'linear-gradient(160deg,#00bbf9,#1e3a8a)' },
+      { name:'Rose Gown', c:'linear-gradient(160deg,#fb7185,#7c2d4a)' },
+      { name:'Violet Robe', c:'linear-gradient(160deg,#9b5de5,#3b1d6e)' },
+    ];
+    const auras = ['#c8a24b','#9b5de5','#00bbf9','#fb7185','#2dd4bf'];
+    return { skins, outfits, auras };
+  }
+
+  renderVals() {
+    const accent = this.props.accent ?? '#c8a24b';
+    const gap = this.props.gap ?? 22;
+    const rm = this.props.reduceMotion ?? false;
+    const pulseAnim = rm ? 'none' : 'auraPulse 1.8s ease-in-out infinite';
+    const floatAnim = rm ? 'none' : 'auraFloat 4s ease-in-out infinite';
+    const { view } = this.state;
+
+    const nav = [
+      ['discover','Discover'],['event','Live Lobby'],['worlds','Worlds'],
+      ['room','In-World'],['avatar','Avatar'],['creator','Creator'],['profile','Profile'],
+    ];
+    const navItems = nav.map(([id,label]) => {
+      const active = view === id || (id==='event' && view==='event') ;
+      const on = view === id;
+      return {
+        label, onClick: () => {
+          if (id==='event') { this.setState({ ev: this.eventData()[0], view:'event' }); }
+          else if (id==='room') { this.setState({ room: { name:'Aurora Hall', online:'842', glow:this.glows.royal }, view:'room' }); }
+          else this.go(id);
+        },
+        btnStyle: `position:relative;display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:${on?'rgba(200,162,75,.1)':'transparent'};border:none;color:${on?'#f4ecd8':'#8a8478'};font-family:'Manrope';font-weight:${on?700:500};font-size:14px;padding:11px 13px;border-radius:11px;cursor:pointer;letter-spacing:.2px;`,
+        barStyle: `position:absolute;left:-18px;top:50%;transform:translateY(-50%);width:3px;height:${on?20:0}px;border-radius:3px;background:var(--accent);transition:height .15s;`,
+      };
+    });
+
+    const allEvents = this.eventData();
+    const heroGlow = this.glows.aurelia;
+    const av = (g,i) => ({ style:`width:30px;height:30px;border-radius:50%;background:${g};border:2px solid #0c0c11;margin-left:${i?-9:0}px;` });
+    const heroAvatars = ['linear-gradient(135deg,#9b5de5,#3b1d6e)','linear-gradient(135deg,#00bbf9,#1e3a8a)','linear-gradient(135deg,var(--accent),#7a5d22)','linear-gradient(135deg,#fb7185,#7c2d4a)'].map(av);
+
+    const cats = ['All','Concerts','Hangouts','Talks'];
+    const filterChips = cats.map(label => {
+      const on = this.state.filter === label;
+      return { label, onClick: () => this.setState({ filter: label }),
+        style:`background:${on?'var(--accent)':'#14141a'};color:${on?'#1a1405':'#9a948a'};border:1px solid ${on?'transparent':'rgba(200,162,75,.16)'};font-weight:${on?800:600};font-size:13px;padding:9px 18px;border-radius:20px;cursor:pointer;font-family:'Manrope';` };
+    });
+    const events = allEvents.filter(e => this.state.filter==='All' || e.cat===this.state.filter).map(e => ({
+      ...e, onClick: () => this.setState({ ev:e, view:'event' }), badgeStyle: this.badgeStyle(e.badge),
+    }));
+
+    // event detail
+    const ev = this.state.ev || allEvents[0];
+    const lineup = [
+      { time:'21:00', act:'Doors & Avatar Lobby', stage:'Aurora Hall', status:'Soon', live:false },
+      { time:'21:30', act:'AURELIA — Main Set', stage:'Centre Stage', status:'Headliner', live:false },
+      { time:'22:45', act:'Afterglow Lounge', stage:'Sky Garden', status:'Chill', live:false },
+      { time:'23:30', act:'Open Decks', stage:'The Velvet Room', status:'Social', live:false },
+    ].map(l => ({ ...l, statusStyle:`font-size:11px;font-weight:700;color:${accent};background:color-mix(in srgb, ${accent} 14%, transparent);padding:5px 11px;border-radius:8px;` }));
+    const joined = this.state.joined;
+    const joinBtnStyle = `width:100%;border:none;cursor:pointer;font-family:'Manrope';font-weight:800;font-size:15px;padding:15px;border-radius:13px;background:${joined?'#1c2a1c':'var(--accent)'};color:${joined?'#86efac':'#1a1405'};box-shadow:${joined?'none':'0 14px 34px -12px '+accent};`;
+    const joinLabel = joined ? '✓ You\u2019re going — Enter at doors' : 'RSVP & Reserve Front-Row';
+
+    // worlds
+    const worldDefs = [
+      ['Aurora Hall','Concert Arena','842','Resident stage for live shows','royal'],
+      ['The Velvet Room','Lounge','128','Intimate after-hours hangout','aurelia'],
+      ['Skyline Loft','Social','28','Members-only rooftop salon','neon'],
+      ['Bass Cathedral','Club','1.2k','Cavernous spatial-audio club','ember'],
+      ['Sky Garden','Chill','340','Ambient nature meet-up','forest'],
+      ['Grand Ballroom','Events','560','Galas, awards & premieres','rose'],
+    ];
+    const worlds = worldDefs.map(([name,theme,online,desc,gk]) => ({
+      name, theme, online, desc, glow:this.glows[gk],
+      onClick: () => this.setState({ room:{ name, online, glow:this.glows[gk] }, view:'room' }),
+    }));
+
+    // room
+    const room = this.state.room || { name:'Aurora Hall', online:'842', glow:this.glows.royal };
+    const ravPos = [[18,30],[40,55],[62,28],[78,62],[30,72]];
+    const ravCol = ['#9b5de5','#00bbf9',accent,'#fb7185','#2dd4bf'];
+    const ravName = ['Mara','Theo','You','Idris','Lin'];
+    const ravSpeak = [true,false,true,false,false];
+    const roomAvatars = ravPos.map((p,i) => ({
+      name: ravName[i],
+      wrapStyle:`position:absolute;left:${p[0]}%;top:${p[1]}%;z-index:3;transform:translate(-50%,-50%);`,
+      dotStyle:`width:${i===2?58:46}px;height:${i===2?58:46}px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 35% 30%, color-mix(in srgb, ${ravCol[i]} 80%, white), ${ravCol[i]});box-shadow:0 0 ${ravSpeak[i]?'34px':'14px'} ${ravCol[i]}, inset 0 -6px 12px rgba(0,0,0,.35);border:${i===2?'3px solid #fff':'2px solid rgba(255,255,255,.4)'};${ravSpeak[i]&&!rm?'animation:auraGlow 1.4s ease-in-out infinite;':''}`,
+    }));
+    const roomList = ravName.map((n,i) => ({
+      name: n + (i===2?' (you)':''),
+      dotStyle:`width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%, color-mix(in srgb, ${ravCol[i]} 80%, white), ${ravCol[i]});flex:none;`,
+      mic: i===2 ? (this.state.micOn?'🎙':'🔇') : (ravSpeak[i]?'🔊':'🔈'),
+      micStyle:`font-size:13px;opacity:${ravSpeak[i]||(i===2&&this.state.micOn)?1:.4};`,
+    }));
+    const micOn = this.state.micOn;
+    const micBtnStyle = `width:52px;height:52px;border-radius:14px;border:none;cursor:pointer;font-size:22px;background:${micOn?accent:'#2a1518'};color:${micOn?'#1a1405':'#fca5a5'};box-shadow:${micOn?'0 8px 22px -8px '+accent:'none'};`;
+    const micIcon = micOn ? '🎙' : '🔇';
+    const micLabel = micOn ? 'Mic live — others hear you nearby' : 'Muted';
+    const eqBars = [0,1,2,3,4].map(i => ({ style:`width:4px;border-radius:2px;background:${accent};height:8px;${micOn&&!rm?`animation:auraEq ${0.6+i*0.12}s ease-in-out infinite;`:''}` }));
+    const reactions = ['👏','🔥','💛','🎉'].map(emoji => ({ emoji, onClick: () => this.bump(emoji) }));
+    const chatLog = [
+      { who:'Theo', text:'the drop in spatial audio is unreal 🔊', col:'#00bbf9' },
+      { who:'Mara', text:'come closer to the stage, sound\u2019s better here', col:'#9b5de5' },
+      { who:'Idris', text:'who\u2019s grabbing front row for AURELIA?', col:'#fb7185' },
+    ].map(m => ({ ...m, dotStyle:`width:9px;height:9px;border-radius:50%;background:${m.col};margin-top:5px;flex:none;` }));
+
+    // avatar
+    const { skins, outfits, auras } = this.avatarTokens();
+    const skinTone = skins[this.state.skin];
+    const outfitColor = outfits[this.state.outfit].c;
+    const auraColor = auras[this.state.aura];
+    const skinBtns = skins.map((c,i) => ({ onClick:()=>this.setState({skin:i}),
+      style:`width:46px;height:46px;border-radius:13px;background:${c};cursor:pointer;border:2px solid ${this.state.skin===i?accent:'rgba(255,255,255,.1)'};box-shadow:${this.state.skin===i?'0 0 0 3px color-mix(in srgb,'+accent+' 30%, transparent)':'none'};` }));
+    const outfitBtns = outfits.map((o,i) => ({ name:o.name, onClick:()=>this.setState({outfit:i}),
+      style:`background:${this.state.outfit===i?'color-mix(in srgb,'+accent+' 14%, #14141a)':'#14141a'};color:${this.state.outfit===i?'#f4ecd8':'#9a948a'};border:1px solid ${this.state.outfit===i?accent:'rgba(200,162,75,.16)'};font-weight:600;font-size:13px;padding:11px 16px;border-radius:11px;cursor:pointer;font-family:'Manrope';` }));
+    const auraBtns = auras.map((c,i) => ({ onClick:()=>this.setState({aura:i}),
+      style:`width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%, color-mix(in srgb,${c} 70%, white), ${c});cursor:pointer;border:2px solid ${this.state.aura===i?'#fff':'rgba(255,255,255,.1)'};box-shadow:0 0 ${this.state.aura===i?'18px':'6px'} ${c};` }));
+    const avatarStage = 'radial-gradient(600px 400px at 50% 30%, color-mix(in srgb, '+accent+' 14%, transparent), transparent), linear-gradient(160deg,#161620,#0c0c12)';
+    const saved = this.state.saved;
+    const saveBtnStyle = `border:none;cursor:pointer;font-family:'Manrope';font-weight:800;font-size:14px;padding:13px 26px;border-radius:12px;background:${saved?'#1c2a1c':accent};color:${saved?'#86efac':'#1a1405'};box-shadow:${saved?'none':'0 12px 30px -12px '+accent};`;
+    const saveLabel = saved ? '✓ Saved across all worlds' : 'Save Avatar';
+
+    // creator
+    const stats = [
+      { label:'Total revenue (90d)', value:'$42.8k', delta:'▲ 18% vs prior', up:true },
+      { label:'Tickets sold', value:'31,204', delta:'▲ 2,140 this week', up:true },
+      { label:'Avg. session', value:'47 min', delta:'▲ 6 min', up:true },
+      { label:'Repeat fans', value:'68%', delta:'▼ 2%', up:false },
+    ].map(s => ({ ...s, deltaStyle:`font-size:12px;font-weight:600;margin-top:8px;color:${s.up?'#86efac':'#fca5a5'};` }));
+    const erows = [
+      ['AURELIA — Live in the Aether','Tonight','12,418','$24,836','On sale','aurelia','#86efac'],
+      ['PULSE: Bass Cathedral','Sat','9,820','$14,730','On sale','ember','#86efac'],
+      ['Founders Salon · Web3','Now','28','$0','Free','royal',accent],
+      ['The Gold Gala','Sun','5,540','$3,324','Draft','rose','#fcd34d'],
+    ];
+    const eventRows = erows.map(([title,date,sold,revenue,status,gk,sc]) => ({
+      title,date,sold,revenue,status, glow:this.glows[gk],
+      statusStyle:`font-size:11px;font-weight:700;color:${sc};`,
+    }));
+    const paid = this.state.paid;
+    const payoutBtnStyle = `width:100%;border:none;cursor:pointer;font-family:'Manrope';font-weight:800;font-size:14px;padding:14px;border-radius:12px;background:${paid?'#1c2a1c':accent};color:${paid?'#86efac':'#1a1405'};`;
+    const payoutLabel = paid ? '✓ Payout on the way' : 'Withdraw to wallet';
+
+    // profile
+    const profileStats = [
+      { value:'214', label:'Events attended' },
+      { value:'6', label:'Worlds owned' },
+      { value:'1.8k', label:'Followers' },
+      { value:'92', label:'Aura level' },
+    ];
+    const ownedWorlds = [
+      { name:'Aurora Hall', online:'842', glow:this.glows.royal },
+      { name:'The Velvet Room', online:'128', glow:this.glows.aurelia },
+      { name:'Sky Garden', online:'340', glow:this.glows.forest },
+    ];
+
+    return {
+      accent, gap, pulseAnim, floatAnim, navItems, liveCount:'3',
+      isDiscover: view==='discover', isEvent: view==='event', isWorlds: view==='worlds',
+      isRoom: view==='room', isAvatar: view==='avatar', isCreator: view==='creator', isProfile: view==='profile',
+      goProfile: () => this.go('profile'), goAvatar: () => this.go('avatar'),
+      backDiscover: () => this.go('discover'), backWorlds: () => this.go('worlds'),
+      openHero: () => this.setState({ ev: allEvents[0], view:'event' }),
+      createWorld: () => this.go('worlds'),
+      heroGlow, heroAvatars, filterChips, events, eventCount: events.length,
+      ev, lineup, toggleJoin: () => this.setState(s=>({joined:!s.joined})), joinBtnStyle, joinLabel,
+      worlds, room, roomAvatars, roomList, micBtnStyle, micIcon, micLabel,
+      toggleMic: () => this.setState(s=>({micOn:!s.micOn})), eqBars, reactions, chatLog,
+      avatarStage, skinTone, outfitColor, auraColor, skins:skinBtns, outfits:outfitBtns, auras:auraBtns,
+      saveAvatar: () => this.setState({saved:true}), saveBtnStyle, saveLabel,
+      stats, eventRows, payout: () => this.setState({paid:true}), payoutBtnStyle, payoutLabel,
+      profileStats, ownedWorlds,
+    };
+  }
+
+  bump(){ /* reaction feedback hook */ }
+}
+</script>
+</body>
+</html>
